@@ -18,6 +18,8 @@ import com.abdi.noteapp.data.entity.Notes
 import com.abdi.noteapp.databinding.FragmentHomeBinding
 import com.abdi.noteapp.ui.NotesViewModel
 import com.abdi.noteapp.utils.Extension.setActionBar
+import com.abdi.noteapp.utils.HelperFunctions
+import com.abdi.noteapp.utils.HelperFunctions.checkIsDataEmpty
 
 class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
@@ -43,6 +45,8 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.mHelperFunction = HelperFunctions
+
         setHasOptionsMenu(true)
 
         val navController = findNavController()
@@ -53,10 +57,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
             fabAdd.setOnClickListener {
                 findNavController().navigate(R.id.action_homeFragment_to_addFragment)
-            }
-
-            btnTest.setOnClickListener {
-                findNavController().navigate(R.id.action_homeFragment_to_detailFragment)
             }
         }
 
@@ -74,18 +74,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
 
             swipeToDelete(this)
-        }
-    }
-
-    private fun checkIsDataEmpty(data: List<Notes>?) {
-        binding.apply {
-            if (data?.isEmpty() == true) {
-                imgNoNotes.visibility = View.VISIBLE
-                rvHome.visibility = View.INVISIBLE
-            } else {
-                imgNoNotes.visibility = View.INVISIBLE
-                rvHome.visibility = View.VISIBLE
-            }
         }
     }
 

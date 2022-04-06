@@ -19,4 +19,6 @@ class NotesRepostory(private val notesDao: NoteDao) {
     fun searchByQuery(query: String) : LiveData<List<Notes>> = notesDao.searchByQuery(query)
 
     suspend fun deleteNote(notes: Notes) = notesDao.deleteNote(notes)
+
+    suspend fun updateNote(notes: Notes) = notesDao.updateNote(notes)
 }

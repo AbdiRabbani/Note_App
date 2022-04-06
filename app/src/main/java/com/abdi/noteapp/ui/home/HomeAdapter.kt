@@ -25,19 +25,21 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.MyViewHolder>() {
         val data = listNotes[position]
 
         holder.binding.apply {
-            tvTitle.text = data.title
-            tvDate.text = data.date
-            tvDescription.text = data.description
-
-            val pink = ContextCompat.getColor(priorityIndicator.context, R.color.pink)
-            val yellow = ContextCompat.getColor(priorityIndicator.context, R.color.yellow)
-            val green = ContextCompat.getColor(priorityIndicator.context, R.color.green)
-
-            when (data.priority) {
-                Priority.HIGH -> priorityIndicator.setCardBackgroundColor(pink)
-                Priority.MEDIUM -> priorityIndicator.setCardBackgroundColor(yellow)
-                Priority.LOW -> priorityIndicator.setCardBackgroundColor(green)
-            }
+            nNotes = data
+            executePendingBindings()
+//            tvTitle.text = data.title
+//            tvDate.text = data.date
+//            tvDescription.text = data.description
+//
+//            val pink = ContextCompat.getColor(priorityIndicator.context, R.color.pink)
+//            val yellow = ContextCompat.getColor(priorityIndicator.context, R.color.yellow)
+//            val green = ContextCompat.getColor(priorityIndicator.context, R.color.green)
+//
+//            when (data.priority) {
+//                Priority.HIGH -> priorityIndicator.setCardBackgroundColor(pink)
+//                Priority.MEDIUM -> priorityIndicator.setCardBackgroundColor(yellow)
+//                Priority.LOW -> priorityIndicator.setCardBackgroundColor(green)
+//            }
         }
     }
 

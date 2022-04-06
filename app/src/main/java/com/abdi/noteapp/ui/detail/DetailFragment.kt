@@ -5,17 +5,23 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
-import com.abdi.noteapp.ui.MainActivity
+import androidx.navigation.fragment.navArgs
 import com.abdi.noteapp.R
+import com.abdi.noteapp.data.entity.Notes
 import com.abdi.noteapp.databinding.FragmentDetailBinding
+import com.abdi.noteapp.ui.NotesViewModel
 import com.abdi.noteapp.utils.Extension.setActionBar
 
 class DetailFragment : Fragment() {
 
-    private var _binding : FragmentDetailBinding? = null
+    private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding as FragmentDetailBinding
+
+    private val detailViewModel by viewModels<NotesViewModel>()
+
+    private val navArgs by navArgs<DetailFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +37,7 @@ class DetailFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
+        binding.safeArgs = navArgs
         binding.toolbarDetail.setActionBar(requireActivity())
     }
 
@@ -40,9 +47,19 @@ class DetailFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when(item.itemId){
-            R.id.menu_edit -> findNavController().navigate(R.id.action_detailFragment_to_updateFragment)
+        when (item.itemId) {
+            R.id.menu_edit -> {
+                val action = DetailFragmentDirections.actionDetailFragmentToUpdateFragment(
+                    Notes(
+                        navArgs.currentItem.id,
+                        navArgs.currentItem.title,
+                        navArgs.currentItem.priority,
+                        navArgs.currentItem.description,
+                        navArgs.currentItem.date
+                    )
+                )
+                findNavController().navigate(action)
+            }
             R.id.menu_delete -> confirmDeleteNote()
         }
         return super.onOptionsItemSelected(item)
@@ -50,13 +67,14 @@ class DetailFragment : Fragment() {
 
     private fun confirmDeleteNote() {
         AlertDialog.Builder(context)
-            .setTitle("Delete Note?")
+            .setTitle("Delete `${navArgs.currentItem.title}`?")
             .setMessage("Are you sure want to remove me?")
-            .setPositiveButton("Sure") { _,_->
+            .setPositiveButton("Sure") { _, _ ->
+                detailViewModel.deleteNote(navArgs.currentItem)
                 findNavController().navigate(R.id.action_detailFragment_to_homeFragment)
                 Toast.makeText(context, "Succes delete note", Toast.LENGTH_LONG).show()
             }
-            .setNegativeButton("Not yet") { _,_->
+            .setNegativeButton("Not yet") { _, _ ->
                 findNavController().navigate(R.id.action_detailFragment_to_homeFragment)
             }
             .show()

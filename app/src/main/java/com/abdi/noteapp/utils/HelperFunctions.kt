@@ -3,7 +3,10 @@ package com.abdi.noteapp.utils
 import android.content.Context
 import android.view.View
 import android.widget.AdapterView
+import androidx.lifecycle.MutableLiveData
 import com.abdi.noteapp.R
+import com.abdi.noteapp.data.entity.Notes
+import com.abdi.noteapp.data.entity.Priority
 import com.google.android.material.card.MaterialCardView
 
 object HelperFunctions {
@@ -43,4 +46,20 @@ object HelperFunctions {
             }
 
         }
+
+    fun parseToPriority(priority: String, context: Context?): Priority {
+        val expectedPriority = context?.resources?.getStringArray(R.array.priorities)
+        return when (priority) {
+            expectedPriority?.get(0) -> Priority.HIGH
+            expectedPriority?.get(1) -> Priority.MEDIUM
+            expectedPriority?.get(2) -> Priority.LOW
+            else -> Priority.HIGH
+        }
+    }
+
+    val emptyDatabase : MutableLiveData<Boolean> = MutableLiveData(true)
+
+    fun checkIsDataEmpty(data: List<Notes>) {
+        emptyDatabase.value = data.isEmpty()
+    }
 }
