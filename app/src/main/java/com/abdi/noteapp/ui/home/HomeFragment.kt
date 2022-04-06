@@ -1,10 +1,12 @@
 package com.abdi.noteapp.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,6 +22,7 @@ import com.abdi.noteapp.ui.NotesViewModel
 import com.abdi.noteapp.utils.Extension.setActionBar
 import com.abdi.noteapp.utils.HelperFunctions
 import com.abdi.noteapp.utils.HelperFunctions.checkIsDataEmpty
+import com.google.android.material.snackbar.Snackbar
 
 class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
@@ -161,12 +164,23 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val deletedItem = homeAdapter.listNotes[viewHolder.adapterPosition]
                 homeViewModel.deleteNote(deletedItem)
-
-                Toast.makeText(context,"Note was deleted..", Toast.LENGTH_SHORT).show()
+                restoredData(viewHolder.itemView, deletedItem)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeToDelete)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    private fun restoredData(view: View, deletedItem: Notes) {
+        val snackBar = Snackbar.make(
+            view, "Deleted `${deletedItem.title}`", Snackbar.LENGTH_LONG
+        )
+        snackBar.setTextColor(ContextCompat.getColor(view.context, R.color.black))
+        snackBar.setAction("Undo") {
+            homeViewModel.insertData(deletedItem)
+        }
+        snackBar.setActionTextColor(ContextCompat.getColor(view.context, R.color.black))
+        snackBar.show()
     }
 
     override fun onDestroyView() {

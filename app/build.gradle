@@ -65,4 +65,7 @@ dependencies {
 
     //RecycleView Wasabeef
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
+
+
+    implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
 }
